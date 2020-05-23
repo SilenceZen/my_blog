@@ -37,4 +37,4 @@ jobs:
           cd /home/zen/my_project/my_blog
           python manage.py migrate
           pkill gunicorn
-          gunicorn --bind unix:/tmp/47.103.1.96.socket my_blog.wsgi:application
+          nohup gunicorn --bind unix:/tmp/47.103.1.96.socket my_blog.wsgi:application > nohup.txt &
