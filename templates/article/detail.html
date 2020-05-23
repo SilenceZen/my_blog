@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-    文章详情
+文章详情
 {% endblock title %}
 
 {% block content %}
@@ -11,29 +11,31 @@
 <!-- 文章详情 -->
 <div class="container">
     <div class="row">
-        <!-- 标题、作者、正文-->
-        <h1 class="col-12 mt-4 mb-4">{{ article.title }}</h1>
-        <div class="col-12 alert alert-success">
-            作者： {{ article.author }}
-            {% if user == article.author %}
-            . <a href="#" onclick="confirm_safe_delete()">删除文章</a>
-            . <a href="{% url 'article:article_update' article.id %}">更新文章</a>
-            {% endif %}
-            <form 
-                style="display: none;"
-                id="safe_delete"
-                action="{% url 'article:article_safe_delete' article.id %}"
-                method="POST"
-            >
-            {% csrf_token %}
-            <button type="submit">发送</button>
-            </form>
-            <div>
-                浏览： {{ article.total_views }}
+        <div class="col-9">
+            <!-- 标题、作者、正文-->
+            <h1 class="mt-4 mb-4">{{ article.title }}</h1>
+            <div class="alert alert-success">
+                作者： {{ article.author }}
+                {% if user == article.author %}
+                . <a href="#" onclick="confirm_safe_delete()">删除文章</a>
+                . <a href="{% url 'article:article_update' article.id %}">更新文章</a>
+                {% endif %}
+                <form style="display: none;" id="safe_delete"
+                    action="{% url 'article:article_safe_delete' article.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">发送</button>
+                </form>
+                <div>
+                    浏览： {{ article.total_views }}
+                </div>
             </div>
-        </div>
-        <div class="col-12">
-            <p>{{ article.body|safe }}</p>
+            <div class="col-3 mt-4">
+                <h4><strong>目录</strong></h4>
+                <hr>
+                <div>
+                    {{ toc|safe }}
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -47,7 +49,7 @@
             //正文
             content: "确认删除这篇文章吗？",
             // 点击确定按钮后调用的回调函数
-            yes: function(index, layero) {
+            yes: function (index, layero) {
                 $('form#safe_delete button').click();
                 layer.close(index)
             }
