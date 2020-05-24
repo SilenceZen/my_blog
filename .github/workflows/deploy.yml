@@ -35,6 +35,7 @@ jobs:
         script: |
           source /home/zen/my_project/venv/bin/activate
           cd /home/zen/my_project/my_blog
+          python manage.py makemigrations
           python manage.py migrate
           pkill gunicorn
           nohup gunicorn --bind unix:/tmp/47.103.1.96.socket my_blog.wsgi:application > nohup.txt &
