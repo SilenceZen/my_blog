@@ -33,40 +33,61 @@
         </div>
     </div>
     {% if search %}
-        {% if articles %}
-            <h4><span style="color: red">{{ search }}</span>的搜索结果如下：</h4>
-            <hr>
-            {% else %}
-            <h4>暂无<span style="color: red">{{ search }}</span>有关的文章。</h4>
-            <hr>
-        {% endif %}
+    {% if articles %}
+    <h4><span style="color: red">{{ search }}</span>的搜索结果如下：</h4>
+    <hr>
+    {% else %}
+    <h4>暂无<span style="color: red">{{ search }}</span>有关的文章。</h4>
+    <hr>
+    {% endif %}
     {% endif %}
     <div class='row mt-2'>
         {% for article in articles %}
         <!-- 文章内容 -->
-        <div class="col-4 mb-4">
-            <!-- 卡片容器 -->
-            <div class="card h-100">
-                <!-- 标题 -->
-                <h4 class="card-header">{{ article.title }}</h4>
-                <!-- 摘要 -->
-                <div class="card-body">
-                    <p class="card-text">{{ article.body|slice:'100' }}...</p>
-                </div>
-                <!-- 注脚 -->
-                <div class="card-footer">
-                    <a href="{% url 'article:article_detail' article.id %}" class="btn btn-primary">阅读本文</a>
-                    <span>
-                        <small class="col alingn-self-end" style="color: gray;">
-                            浏览： {{ article.total_views }}
-                        </small>
-                    </span>
-                </div>
+        <div class="col-12">
+            <!-- 栏目 -->
+            {% if article.column %}
+            <button type="button" class="btn btn-sm mb-2
+                {% if article.column.title == 'Django' %}
+                    btn-success
+                {% elif article.column.title == 'Java' %}
+                    btn-danger
+                {% elif article.column.title == 'HTML' %}
+                    btn-warning
+                {% endif %}
+                ">
+                {{ article.column }}
+            </button>
+            {% endif %}
+            <!-- 标题 -->
+            <h4>
+                <b>
+                    <a href="{% url 'article:article_detail' article.id %}" style="color:black;">
+                        {{ article.title }}
+                    </a>
+                </b>
+            </h4>
+            <!-- 摘要 -->
+            <div>
+                <p style="color: gray;">{{ article.body|slice:'100' }}...</p>
             </div>
+            <!-- 注脚 -->
+            <p>
+                <span  style="color:green;">
+                    {{ article.total_views }} 浏览&nbsp;&nbsp;&nbsp;
+                </span>
+                <span  style="color:blue;">
+                    {{ article.created|date:'Y-m-d' }} 发布&nbsp;&nbsp;&nbsp;
+                </span>
+                <span  style="color:darkred;">
+                    {{ article.updated|date:'Y-m-d' }} 更新
+                </span>
+            </p>
         </div>
         {% endfor %}
-
     </div>
+
+</div>
 </div>
 <div class="pagination row">
     <div class="m-auto">
@@ -76,7 +97,8 @@
                 &laquo; 1
             </a>
             <span>...</span>
-            <a href="?page={{ articles.previous_page_number }}&order={{ order }}&search={{ search }}" class="btn btn-secondary">
+            <a href="?page={{ articles.previous_page_number }}&order={{ order }}&search={{ search }}"
+                class="btn btn-secondary">
                 {{ articles.previous_page_number }}
             </a>
             {% endif %}
@@ -84,11 +106,13 @@
                 {{ articles.number }}
             </span>
             {% if articles.has_next %}
-            <a href="?page={{ articles.next_page_number }}&order={{ order }}&search={{ search }}" class="btn btn-secondary">
+            <a href="?page={{ articles.next_page_number }}&order={{ order }}&search={{ search }}"
+                class="btn btn-secondary">
                 {{ articles.next_page_number }}
             </a>
             <span>...</span>
-            <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&search={{ search }}" class="btn btn-success">
+            <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&search={{ search }}"
+                class="btn btn-success">
                 {{ articles.paginator.num_pages }} &raquo;
             </a>
             {% endif %}
