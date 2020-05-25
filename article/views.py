@@ -5,6 +5,7 @@ from django.http import HttpResponse
 # 引入刚才定义的ArticlePostForm表单类
 from .forms import ArticlePostForm
 # 引入User模型
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import ArticlePost, ArticleColumn
 from django.core.paginator import Paginator
@@ -72,12 +73,12 @@ def article_detail(request, id):
     # 载入模板，并返回context对象
     return render(request, 'article/detail.html', context)
 
-
+@login_required(login_url='/userprofile/login')
 def article_create(request):
     # 判断哟京沪是否提交数据
     if request.method == 'POST':
         # 将提交的数据赋值到表单实例中
-        article_post_form = ArticlePostForm(data=request.POST)
+        article_post_form = ArticlePostForm(request.POST, request.FILES)
         # 判断提交的数据是否满足模型的要求
         if article_post_form.is_valid():
             # 保存数据，但暂时不提交到数据库中
@@ -118,6 +119,7 @@ def article_safe_delete(request, id):
     else:
         return HttpResponse("仅允许post请求")
 
+@login_required(login_url='/userprofile/login')
 def article_update(request, id):
     """
     更新文章的视图函数
@@ -141,6 +143,10 @@ def article_update(request, id):
                 article.column = ArticleColumn.objects.get(id=request.POST['column'])
             else:
                 article.column = None
+            if request.FILES.get('avatar'):
+                article.avatar = request.FILES.get('avatar')
+            
+            article.tags.set(*request.POST.get('tags').split(','), clear=True)
             article.save()
             # 完成后返回到修改的文章中，序传入文章的 id 值
             return redirect("article:article_detail", id=id)
@@ -154,6 +160,6 @@ def article_update(request, id):
         article_post_form = ArticlePostForm()
         columns = ArticleColumn.objects.all()
         #　赋值上下文，将　article 文章对象也传递进去，以便提取旧的内容
-        context = {'article': article, 'article_post_form': article_post_form, 'columns': columns }
+        context = {'article': article, 'article_post_form': article_post_form, 'columns': columns, 'tags': ','.join([x for x in article.tags.names()],) }
         # 将响应返回到模板中
         return render(request, 'article/update.html', context)

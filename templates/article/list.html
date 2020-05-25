@@ -19,14 +19,15 @@
             </a>
         </li>
         <li class="breadcrumb-item">
-            <a href="{% url 'article:article_list' %}?order=total_views&search={{ search }}&column={{ column }}&tag={{ tag }}">
+            <a
+                href="{% url 'article:article_list' %}?order=total_views&search={{ search }}&column={{ column }}&tag={{ tag }}">
                 最新
             </a>
         </li>
     </nav>
     <div class="row">
         <div class="col-auto mr-auto">
-            <form class="form-inline">
+            <form class="form-inline ">
                 <label class="sr-only">content</label>
                 <input type="text" class="form-control mb-2 mr-sm-2" name="search" placeholder="搜索文章..." required>
             </form>
@@ -43,8 +44,13 @@
     {% endif %}
     <div class='row mt-2'>
         {% for article in articles %}
-        <!-- 文章内容 -->
-        <div class="col-12">
+        <!-- 标题图 -->
+        {% if article.avatar %}
+        <div class="col-3">
+            <img src="{{ article.avatar.url }}" alt="avatar" style="max-width: 100%; border-radius: 20px;">
+        </div>
+        {% endif %}
+        <div class="col">
             <!-- 栏目 -->
             {% if article.column %}
             <button type="button" class="btn btn-sm mb-2
@@ -62,9 +68,9 @@
             <!-- 标签 -->
             <span>
                 {% for tag in article.tags.all %}
-                    <a href="#" class="badge badge-secondary">
-                        {{ tag }}
-                    </a>
+                <a href="#" class="badge badge-secondary">
+                    {{ tag }}
+                </a>
                 {% endfor %}
             </span>
             <!-- 标题 -->
@@ -81,17 +87,18 @@
             </div>
             <!-- 注脚 -->
             <p>
-                <span  style="color:green;">
+                <span style="color:green;">
                     {{ article.total_views }} 浏览&nbsp;&nbsp;&nbsp;
                 </span>
-                <span  style="color:blue;">
+                <span style="color:blue;">
                     {{ article.created|date:'Y-m-d' }} 发布&nbsp;&nbsp;&nbsp;
                 </span>
-                <span  style="color:darkred;">
+                <span style="color:darkred;">
                     {{ article.updated|date:'Y-m-d' }} 更新
                 </span>
             </p>
         </div>
+        <hr style="width: 100%;" />
         {% endfor %}
     </div>
 
@@ -101,7 +108,8 @@
     <div class="m-auto">
         <span class="step-links">
             {% if articles.has_previous %}
-            <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}" class="btn btn-success">
+            <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
+                class="btn btn-success">
                 &laquo; 1
             </a>
             <span>...</span>
