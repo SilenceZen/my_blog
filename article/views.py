@@ -68,8 +68,9 @@ def article_detail(request, id):
             'markdown.extensions.toc',
         ])
     article.body = md.convert(article.body)
+    comment_form = CommentForm()
     # 需要传递给模板的对象
-    context = {'article': article, 'toc': md.toc, 'comments': comments}
+    context = {'article': article, 'toc': md.toc, 'comments': comments, 'comment_form': comment_form,}
     # 载入模板，并返回context对象
     return render(request, 'article/detail.html', context)
 
