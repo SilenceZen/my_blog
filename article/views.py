@@ -11,7 +11,7 @@ from .models import ArticlePost, ArticleColumn
 from django.core.paginator import Paginator
 from django.db.models import Q
 from comment.models import Comment
-from comment.form import CommentForm
+from comment.forms import CommentForm
 import markdown
 
 def article_list(request):
