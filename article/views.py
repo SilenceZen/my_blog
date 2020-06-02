@@ -11,6 +11,7 @@ from .models import ArticlePost, ArticleColumn
 from django.core.paginator import Paginator
 from django.db.models import Q
 from comment.models import Comment
+from comment.form import CommentForm
 import markdown
 
 def article_list(request):
@@ -68,7 +69,7 @@ def article_detail(request, id):
             'markdown.extensions.toc',
         ])
     article.body = md.convert(article.body)
-    comment_form = CommentForm()
+    comment_form = CommentForm]()
     # 需要传递给模板的对象
     context = {'article': article, 'toc': md.toc, 'comments': comments, 'comment_form': comment_form,}
     # 载入模板，并返回context对象
