@@ -38,4 +38,4 @@ jobs:
           python manage.py makemigrations
           python manage.py migrate
           pkill gunicorn
-          nohup gunicorn --bind unix:/tmp/47.103.1.96.socket my_blog.wsgi:application > nohup.txt &
+          nohup gunicorn --bind 47.103.1.96:2901 my_blog.wsgi:application > nohup.txt &
